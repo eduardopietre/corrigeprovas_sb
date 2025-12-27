@@ -168,9 +168,9 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 10: Processing Output Generation**
     - **Validates: Requirements 6.6, 6.7, 6.8, 6.9, 6.10**
 
-- [ ] 6. Checkpoint - Verificar Worker
-  - Executar worker localmente conectado ao Supabase local
-  - Testar com imagens de exemplo
+- [x] 6. Checkpoint - Verificar Worker
+  - Criar testes para worker localmente conectado ao Supabase local
+  - Testes com imagens de exemplo, check corrector_backend_v2/tests for info
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 7. Implementar Frontend

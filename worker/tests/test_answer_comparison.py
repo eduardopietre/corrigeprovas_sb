@@ -6,8 +6,8 @@ Validates: Requirements 6.5
 """
 
 import pytest
-from hypothesis import given, strategies as st, settings
-
+from hypothesis import given, settings
+from hypothesis import strategies as st
 from worker.image_processor import compare_answers
 
 
@@ -33,7 +33,8 @@ class TestAnswerComparison:
     
     def test_with_annulled(self):
         """Respostas anuladas (marcadas com -)."""
-        assert compare_answers("A-CD", "ABCD") == 2  # A e D corretos
+        assert compare_answers("A-CD", "A-CD") == 4  # Todas iguais incluindo anulada
+        assert compare_answers("A-CD", "ABCD") == 3  # A, C, D corretos
     
     def test_empty_strings(self):
         """Strings vazias."""
