@@ -3,22 +3,22 @@
 // Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7
 
 import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
-import {
-  createUserClient,
-  createServiceClient,
-  getUser,
-  type CorrectionJob,
-  type AnswerKey,
-  type Template,
-} from "../_shared/supabase.ts";
-import { parseBody } from "../_shared/validation.ts";
+import { handleCors, withCors } from "../_shared/cors.ts";
 import {
   AppError,
   ErrorCode,
   createErrorResponse,
   createSuccessResponse,
 } from "../_shared/errors.ts";
-import { handleCors, withCors } from "../_shared/cors.ts";
+import {
+  createServiceClient,
+  createUserClient,
+  getUser,
+  type AnswerKey,
+  type CorrectionJob,
+  type Template,
+} from "../_shared/supabase.ts";
+import { parseBody } from "../_shared/validation.ts";
 
 // Input validation schema
 const CreateJobInput = z.object({
@@ -68,9 +68,35 @@ Deno.serve(async (req: Request) => {
     // Parse and validate input
     const input = await parseBody(req, CreateJobInput);
 
+    // Validate storage paths in items
+    for (let i = 0; i < input.items.length; i++) {
+      const item = input.items[i];
+      try {
+        validateStoragePath(item.originalStoragePath);
+      } catch (error) {
+        if (error instanceof SecurityError) {
+          throw new AppError(
+            ErrorCode.VALIDATION_ERROR,
+            `Invalid storage path in item ${i}: ${error.message}`,
+            { index: i, path: item.originalStoragePath }
+          );
+        }
+        throw error;
+      }
+    }
+
     // Get idempotency key from header or body
     const idempotencyKey =
       req.headers.get("x-idempotency-key") || input.idempotencyKey;
+
+    // Validate idempotency key format if provided
+    if (idempotencyKey && !validateIdempotencyKey(idempotencyKey)) {
+      throw new AppError(
+        ErrorCode.VALIDATION_ERROR,
+        "Invalid idempotency key format. Must be 1-255 characters, alphanumeric, hyphens, and underscores only.",
+        { idempotencyKey }
+      );
+    }
 
     // Create clients
     const userClient = createUserClient(req);

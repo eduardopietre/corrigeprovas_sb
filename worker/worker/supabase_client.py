@@ -5,15 +5,19 @@ Encapsula operações de banco de dados, storage e fila.
 """
 
 import logging
-from typing import Optional, List, Any
 from datetime import datetime
+from typing import Any, List, Optional
 
-from supabase import create_client, Client
+from supabase import Client, create_client
 
 from .config import WorkerConfig
 from .models import (
-    CorrectionJob, CorrectionItem, Template, AnswerKey,
-    JobStatus, QueueMessage
+    AnswerKey,
+    CorrectionItem,
+    CorrectionJob,
+    JobStatus,
+    QueueMessage,
+    Template,
 )
 
 logger = logging.getLogger(__name__)
@@ -363,6 +367,16 @@ class SupabaseWorkerClient:
             Conteúdo do arquivo em bytes.
         """
         try:
+            from .security import SecurityError, validate_bucket_name
+            
+            # Validate bucket name
+            if not validate_bucket_name(bucket):
+                raise SecurityError(f"Invalid bucket name: {bucket}")
+            
+            # Validate path doesn't contain traversal sequences
+            if '..' in path or path.startswith('/') or '\\' in path:
+                raise SecurityError(f"Invalid path: {path}")
+            
             response = self.client.storage.from_(bucket).download(path)
             return response
         except Exception as e:
@@ -383,6 +397,24 @@ class SupabaseWorkerClient:
             Caminho do arquivo no storage.
         """
         try:
+            from .security import SecurityError, validate_bucket_name
+            
+            # Validate bucket name
+            if not validate_bucket_name(bucket):
+                raise SecurityError(f"Invalid bucket name: {bucket}")
+            
+            # Validate path doesn't contain traversal sequences
+            if '..' in path or path.startswith('/') or '\\' in path:
+                raise SecurityError(f"Invalid path: {path}")
+            
+            # Validate content type
+            allowed_types = {
+                'image/jpeg', 'image/png', 'image/webp', 'image/tiff',
+                'application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+            if content_type not in allowed_types:
+                raise SecurityError(f"Invalid content type: {content_type}")
+            
             self.client.storage.from_(bucket).upload(
                 path,
                 data,

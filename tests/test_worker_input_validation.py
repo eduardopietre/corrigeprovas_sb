@@ -70,22 +70,42 @@ class TestWorkerInputValidation:
             "uploads/user1/file.jpg\x00../../../etc/passwd",  # Null byte injection
         ]
         
-        for malicious_path in malicious_paths:
-            # Test the _download_image method's path parsing
-            parts = malicious_path.split("/", 1)
-            if len(parts) != 2:
-                bucket = "uploads"
-                path = malicious_path
-            else:
-                bucket = parts[0]
-                path = parts[1]
+        try:
+            # If security fixes are implemented, these should be rejected
+            from worker.worker.security import SecurityError, validate_storage_path
             
-            # VULNERABILITY: Check if path traversal sequences are present
-            if "../" in path or "../" in bucket or "\x00" in path:
-                pytest.fail(
-                    f"VULNERABILITY CONFIRMED: Malicious storage path not properly validated: "
-                    f"bucket='{bucket}', path='{path}'"
-                )
+            for malicious_path in malicious_paths:
+                # With security fixes, these should raise SecurityError
+                with pytest.raises(SecurityError):
+                    validate_storage_path(malicious_path)
+                    
+                # Test that _download_image rejects malicious paths
+                result = processor._download_image(malicious_path)
+                assert result is None, f"Malicious path should be rejected: {malicious_path}"
+                
+            # Ensure download_file was not called for malicious paths
+            mock_supabase_client.download_file.assert_not_called()
+            
+            print("✅ SECURITY FIX CONFIRMED: Malicious storage paths are properly blocked")
+            
+        except ImportError:
+            # If security module doesn't exist, test old behavior
+            for malicious_path in malicious_paths:
+                # Test the old _download_image method's path parsing
+                parts = malicious_path.split("/", 1)
+                if len(parts) != 2:
+                    bucket = "uploads"
+                    path = malicious_path
+                else:
+                    bucket = parts[0]
+                    path = parts[1]
+                
+                # VULNERABILITY: Check if path traversal sequences are present
+                if "../" in path or "../" in bucket or "\x00" in path:
+                    pytest.fail(
+                        f"VULNERABILITY CONFIRMED: Malicious storage path not properly validated: "
+                        f"bucket='{bucket}', path='{path}'"
+                    )
     
     def test_job_id_validation(self, mock_supabase_client, mock_config):
         """

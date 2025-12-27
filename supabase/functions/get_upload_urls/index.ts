@@ -3,15 +3,18 @@
 // Requirements: 4.1, 4.2
 
 import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
-import { createUserClient, getUser } from "../_shared/supabase.ts";
-import { parseBody } from "../_shared/validation.ts";
+import { handleCors, withCors } from "../_shared/cors.ts";
 import {
   AppError,
-  ErrorCode,
   createErrorResponse,
   createSuccessResponse,
+  ErrorCode,
 } from "../_shared/errors.ts";
-import { handleCors, withCors } from "../_shared/cors.ts";
+import {
+  sanitizeFilename
+} from "../_shared/security.ts";
+import { createUserClient, getUser } from "../_shared/supabase.ts";
+import { parseBody } from "../_shared/validation.ts";
 
 // Input validation schema
 const GetUploadUrlsInput = z.object({
@@ -78,14 +81,39 @@ Deno.serve(async (req: Request) => {
 
     for (let i = 0; i < input.count; i++) {
       const contentType = input.contentTypes[i];
+
+      // Validate content type
+      if (!isValidContentType(contentType)) {
+        throw new AppError(
+          ErrorCode.VALIDATION_ERROR,
+          `Invalid content type: ${contentType}`,
+          { index: i, contentType }
+        );
+      }
+
       const extension = getExtensionFromContentType(contentType);
       const filenameHint = input.filenameHints?.[i];
-      
-      // Generate unique filename
-      const filename = filenameHint
-        ? `${sanitizeFilename(filenameHint)}_${timestamp}_${i}${extension}`
-        : `upload_${timestamp}_${i}${extension}`;
-      
+
+      // Generate unique filename with security validation
+      let filename: string;
+      try {
+        if (filenameHint) {
+          const sanitizedHint = sanitizeFilename(filenameHint);
+          filename = `${sanitizedHint}_${timestamp}_${i}${extension}`;
+        } else {
+          filename = `upload_${timestamp}_${i}${extension}`;
+        }
+      } catch (error) {
+        if (error instanceof SecurityError) {
+          throw new AppError(
+            ErrorCode.VALIDATION_ERROR,
+            `Invalid filename hint: ${error.message}`,
+            { index: i, filenameHint }
+          );
+        }
+        throw error;
+      }
+
       // Path format: uploads/{uid}/{filename}
       const path = `${user.id}/${filename}`;
 
@@ -129,11 +157,4 @@ function getExtensionFromContentType(contentType: string): string {
     "application/pdf": ".pdf",
   };
   return extensions[contentType] || ".bin";
-}
-
-// Helper: Sanitize filename to remove special characters
-function sanitizeFilename(filename: string): string {
-  return filename
-    .replace(/[^a-zA-Z0-9_-]/g, "_")
-    .substring(0, 50);
 }

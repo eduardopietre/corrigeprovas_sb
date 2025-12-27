@@ -9,12 +9,17 @@ import time
 from datetime import datetime
 from typing import List, Optional
 
+from .image_processor import ImageProcessor
 from .models import (
-    CorrectionJob, CorrectionItem, Template, AnswerKey,
-    JobStatus, ProcessedItem, ErrorCode
+    AnswerKey,
+    CorrectionItem,
+    CorrectionJob,
+    ErrorCode,
+    JobStatus,
+    ProcessedItem,
+    Template,
 )
 from .supabase_client import SupabaseWorkerClient
-from .image_processor import ImageProcessor
 from .xlsx_generator import XLSXGenerator
 
 logger = logging.getLogger(__name__)
@@ -262,15 +267,14 @@ class JobProcessor:
             Bytes da imagem ou None se falhar.
         """
         try:
-            # Extrai bucket e path
-            parts = storage_path.split("/", 1)
-            if len(parts) != 2:
-                # Assume bucket "uploads" se não especificado
-                bucket = "uploads"
-                path = storage_path
-            else:
-                bucket = parts[0]
-                path = parts[1]
+            from .security import SecurityError, validate_storage_path
+            
+            # Validate and parse storage path securely
+            try:
+                bucket, path = validate_storage_path(storage_path)
+            except SecurityError as e:
+                logger.error(f"Security violation in storage path {storage_path}: {e}")
+                return None
             
             return self.client.download_file(bucket, path)
         except Exception as e:
@@ -295,17 +299,24 @@ class JobProcessor:
             Caminho no Storage ou None se falhar.
         """
         try:
-            # Caminho: results/{user_id}/{job_id}/marked_{index}.jpg
-            path = f"{job.owner_user_id}/{job.id}/marked_{item.index:04d}.jpg"
+            from .security import SecurityError, create_secure_path
+            
+            # Create secure path with validation
+            try:
+                filename = f"marked_{item.index:04d}.jpg"
+                secure_path = create_secure_path(job.owner_user_id, job.id, filename)
+            except SecurityError as e:
+                logger.error(f"Security violation creating path for job {job.id}: {e}")
+                return None
             
             self.client.upload_file(
                 bucket="results",
-                path=path,
+                path=secure_path,
                 data=image_bytes,
                 content_type="image/jpeg"
             )
             
-            return f"results/{path}"
+            return f"results/{secure_path}"
         except Exception as e:
             logger.error(f"Erro ao fazer upload da imagem marcada: {e}")
             return None
