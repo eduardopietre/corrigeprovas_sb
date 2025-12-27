@@ -54,7 +54,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 14: Storage Path Enforcement**
     - **Validates: Requirements 11.6, 11.7**
 
-- [ ] 2. Checkpoint - Verificar infraestrutura
+- [x] 2. Checkpoint - Verificar infraestrutura
   - Executar `supabase db reset` e verificar migrations
   - Testar políticas RLS manualmente
   - Verificar buckets de Storage
