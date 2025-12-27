@@ -26,6 +26,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+security = [
+    "pathvalidate>=3.0.0",
+    "werkzeug>=3.0.0",
+]
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",
