@@ -111,9 +111,14 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 13: Subscription State Management**
     - **Validates: Requirements 10.2, 10.3, 10.4, 10.5**
 
-  - [ ]* 3.10 Escrever testes de propriedade para validação de entrada
+  - [ ] 3.10 Escrever testes de propriedade para validação de entrada
     - **Property 17: Input Validation**
     - **Validates: Requirements 14.1, 14.2, 14.4**
+
+  - [x] 3.11 Escrever testes automatizados
+    - Cada função do supabase functions serve deve ser testada
+    - Executar `supabase functions serve` localmente
+    - Executar testes
 
 - [x] 4. Checkpoint - Verificar Edge Functions
   - Executar `supabase functions serve` localmente
