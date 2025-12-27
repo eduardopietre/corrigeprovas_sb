@@ -1,0 +1,19 @@
+# Configuração UV para o projeto CorrigeProvas
+
+# Versão mínima do UV
+required-version = ">=0.1.0"
+
+# Usar Python 3.10 por padrão
+python-preference = "only-managed"
+
+# Usar cache para acelerar instalações
+cache-dir = ".uv-cache"
+
+# Configurações de resolução de dependências
+resolution = "highest"
+
+# Configurações de índice
+index-url = "https://pypi.org/simple"
+
+# Usar build isolation
+no-build-isolation = false

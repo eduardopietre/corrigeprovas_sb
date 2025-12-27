@@ -111,7 +111,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 13: Subscription State Management**
     - **Validates: Requirements 10.2, 10.3, 10.4, 10.5**
 
-  - [ ] 3.10 Escrever testes de propriedade para validação de entrada
+  - [ ]* 3.10 Escrever testes de propriedade para validação de entrada
     - **Property 17: Input Validation**
     - **Validates: Requirements 14.1, 14.2, 14.4**
 
@@ -147,7 +147,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - Implementar generate_marked_image() para imagem com correções
     - _Requirements: 6.3, 6.4, 6.6_
 
-  - [ ]* 5.4 Escrever testes de propriedade para comparação de respostas
+  - [ ] 5.4 Escrever testes de propriedade para comparação de respostas
     - **Property 9: Answer Comparison Correctness**
     - **Validates: Requirements 6.5**
 
@@ -156,7 +156,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - Incluir resumo estatístico
     - _Requirements: 6.7_
 
-  - [ ] 5.6 Implementar fluxo completo de processamento
+  - [x] 5.6 Implementar fluxo completo de processamento
     - Orquestrar download → processamento → upload para cada item
     - Atualizar correction_items com resultados
     - Gerar e fazer upload do XLSX ao final
