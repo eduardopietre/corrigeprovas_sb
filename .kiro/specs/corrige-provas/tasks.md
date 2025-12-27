@@ -362,18 +362,18 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 3: Role-Based Access Control**
     - **Validates: Requirements 1.6, 1.7**
 
-- [ ] 10. Implementar Cron Jobs
-  - [ ] 10.1 Configurar pg_cron no Supabase
+- [x] 10. Implementar Cron Jobs
+  - [x] 10.1 Configurar pg_cron no Supabase
     - Habilitar extensão pg_cron
     - Criar job para detectar jobs órfãos (PROCESSING > timeout)
     - _Requirements: 13.1, 13.2_
 
-  - [ ] 10.2 Implementar handler de timeout
+  - [x] 10.2 Implementar handler de timeout
     - Marcar jobs expirados como FAILED
     - Chamar release_tokens para reembolso
     - _Requirements: 13.2, 13.3_
 
-  - [ ]* 10.3 Escrever testes de propriedade para timeout handling
+  - [x] 10.3 Escrever testes para Cron Jobs
     - **Property 16: Timeout Handling**
     - **Validates: Requirements 13.2, 13.3**
 

@@ -11,16 +11,16 @@ SELECT pgmq.create('corrections');
 CREATE OR REPLACE FUNCTION pgmq_send(
     queue_name TEXT,
     message JSONB
-) RETURNS BIGINT AS $
+) RETURNS BIGINT AS $$
 BEGIN
     RETURN pgmq.send(queue_name, message);
 END;
-$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Create a wrapper function for reading messages (for use in Worker)
 CREATE OR REPLACE FUNCTION pgmq_read(
     queue_name TEXT,
-    vt INTEGER DEFAULT 30,
+    visibility_timeout INTEGER DEFAULT 30,
     qty INTEGER DEFAULT 1
 ) RETURNS TABLE (
     msg_id BIGINT,
@@ -28,31 +28,31 @@ CREATE OR REPLACE FUNCTION pgmq_read(
     enqueued_at TIMESTAMPTZ,
     vt TIMESTAMPTZ,
     message JSONB
-) AS $
+) AS $$
 BEGIN
-    RETURN QUERY SELECT * FROM pgmq.read(queue_name, vt, qty);
+    RETURN QUERY SELECT * FROM pgmq.read(queue_name, visibility_timeout, qty);
 END;
-$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Create a wrapper function for deleting messages (for use in Worker)
 CREATE OR REPLACE FUNCTION pgmq_delete(
     queue_name TEXT,
     msg_id BIGINT
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 BEGIN
     RETURN pgmq.delete(queue_name, msg_id);
 END;
-$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Create a wrapper function for archiving messages (for use in Worker)
 CREATE OR REPLACE FUNCTION pgmq_archive(
     queue_name TEXT,
     msg_id BIGINT
-) RETURNS BOOLEAN AS $
+) RETURNS BOOLEAN AS $$
 BEGIN
     RETURN pgmq.archive(queue_name, msg_id);
 END;
-$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Grant execute permissions to service role functions
 -- Note: These functions use SECURITY DEFINER so they run with owner privileges
