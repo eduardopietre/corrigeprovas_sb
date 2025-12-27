@@ -2,7 +2,7 @@
 // Generates signed URLs for direct upload to Storage
 // Requirements: 4.1, 4.2
 
-import { z } from "zod";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import { createUserClient, getUser } from "../_shared/supabase.ts";
 import { parseBody } from "../_shared/validation.ts";
 import {

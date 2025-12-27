@@ -2,7 +2,7 @@
 // Returns signed URLs for downloading correction results
 // Requirements: 7.1, 7.2, 7.3, 7.4
 
-import { z } from "zod";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import {
   createUserClient,
   getUser,

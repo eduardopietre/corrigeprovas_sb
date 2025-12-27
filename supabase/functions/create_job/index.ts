@@ -2,7 +2,7 @@
 // Creates a correction job, reserves tokens, and publishes to queue
 // Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7
 
-import { z } from "zod";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 import {
   createUserClient,
   createServiceClient,

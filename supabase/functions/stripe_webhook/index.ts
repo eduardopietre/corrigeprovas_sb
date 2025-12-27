@@ -2,7 +2,7 @@
 // Processes Stripe webhook events for subscription management
 // Requirements: 10.3, 10.4
 
-import Stripe from "stripe";
+import Stripe from "https://esm.sh/stripe@14.14.0?target=deno";
 import { createServiceClient } from "../_shared/supabase.ts";
 import {
   AppError,
