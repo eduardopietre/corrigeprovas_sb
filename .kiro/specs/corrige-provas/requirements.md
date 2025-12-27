@@ -23,6 +23,9 @@ IMPORTANTE: Parte do backend com a lógica em python já existe.
 - **Token**: Unidade de consumo para controle de uso do sistema
 - **RLS**: Row Level Security - políticas de segurança no Postgres
 - **Signed_URL**: URL temporária com assinatura para acesso seguro a arquivos
+- **Exam_Variant**: Versão de uma prova com ordem específica de questões e alternativas
+- **Model_Identifier**: Identificador único de um modelo de prova (ex: Modelo A, Modelo B)
+- **Shuffle_Seed**: Semente para randomização determinística, permitindo reprodutibilidade
 
 ## Requirements
 
@@ -176,6 +179,36 @@ IMPORTANTE: Parte do backend com a lógica em python já existe.
 2. WHEN creating an exam, THE Sistema SHALL persist exam metadata in Postgres (exams table)
 3. WHEN creating exam variants, THE Sistema SHALL store variant_index, model_id, and qrcode_payload
 4. WHEN saving exam artifacts, THE Sistema SHALL upload ZIPs/DOCX to Storage bucket (exports or templates)
+
+### Requirement 15: Randomização de Provas e Geração de Modelos
+
+**User Story:** As a teacher, I want to randomize question and alternative order to generate multiple exam variants, so that I can reduce cheating and have unique answer keys for each variant.
+
+#### Acceptance Criteria
+
+1. WHEN creating an exam with randomization enabled, THE Sistema SHALL allow the user to specify the number of variants to generate
+2. WHEN generating variants, THE Sistema SHALL shuffle the order of questions according to user preference (enabled/disabled)
+3. WHEN generating variants, THE Sistema SHALL shuffle the order of alternatives within each question according to user preference (enabled/disabled)
+4. WHEN generating variants with shuffled alternatives, THE Sistema SHALL update the correct answer letter to match the new position
+5. FOR EACH generated variant, THE Sistema SHALL produce a unique answer_key reflecting the shuffled order
+6. WHEN generating multiple variants, THE Sistema SHALL assign a unique model identifier (e.g., Model A, Model B) to each variant
+7. WHEN exporting variants, THE Sistema SHALL generate a ZIP containing all DOCX files and a summary of answer keys per model
+8. THE Sistema SHALL ensure that shuffling is deterministic when given the same seed, allowing reproducibility
+
+### Requirement 16: Imagens em Questões e Alternativas
+
+**User Story:** As a teacher, I want to add images to questions and alternatives, so that I can create richer exam content with diagrams, charts, and visual elements.
+
+#### Acceptance Criteria
+
+1. WHEN editing a question, THE Sistema SHALL allow the user to insert one or more images in the question text
+2. WHEN editing an alternative, THE Sistema SHALL allow the user to insert one image per alternative
+3. WHEN uploading images for questions, THE Sistema SHALL validate that the file is a valid image format (JPEG, PNG, WebP)
+4. WHEN uploading images for questions, THE Sistema SHALL store the image in Storage bucket and reference it in the question data
+5. WHEN generating DOCX, THE Sistema SHALL embed all referenced images inline at their designated positions
+6. WHEN displaying question preview, THE Sistema SHALL render images at appropriate size maintaining aspect ratio
+7. IF an image upload fails, THEN THE Sistema SHALL display an error message and allow retry without losing other question data
+8. WHEN shuffling questions or alternatives containing images, THE Sistema SHALL preserve the image associations correctly
 
 ### Requirement 13: Rotinas de Manutenção (Cron)
 

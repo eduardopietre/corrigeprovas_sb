@@ -236,37 +236,123 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 4: Template Constraints**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5**
 
-- [ ] 8. Checkpoint - Verificar Frontend
+- [x] 8. Checkpoint - Verificar Frontend
   - Executar `npm run dev` e testar fluxos manualmente
   - Verificar integração com Supabase local
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 9. Implementar funcionalidades adicionais
-  - [ ] 9.1 Implementar criação de provas client-side
-    - Integrar jszip e qrious para geração de DOCX/ZIP
-    - Usar componentes shadcn/ui: Form, Input, Select, Button, Tabs, Dialog
-    - Persistir metadados em exams e exam_variants
-    - Upload de artefatos para Storage
-    - _Requirements: 12.1, 12.2, 12.3, 12.4_
+- [x] 9. Implementar funcionalidades adicionais
+  - [x] 9.1 Implementar criação de provas client-side
+    - [x] 9.1.1 Criar estrutura de dados para questões e alternativas
+      - Implementar tipos ExamQuestion, ExamAlternative, QuestionImage, AlternativeImage
+      - Criar contexto ExamBuilderContext para gerenciar estado do editor
+      - _Requirements: 12.1, 16.1, 16.2_
+
+    - [x] 9.1.2 Implementar ShuffleService para randomização determinística
+      - Implementar Fisher-Yates shuffle com seed
+      - Implementar generateVariantSeed para seeds únicas por variante
+      - Implementar getShuffledCorrectAnswer para mapear resposta correta
+      - _Requirements: 15.2, 15.3, 15.4, 15.8_
+
+    - [x] 9.1.3 Escrever testes de propriedade para ShuffleService
+      - **Property 18: Shuffle Determinism**
+      - **Property 19: Conditional Shuffling**
+      - **Property 20: Answer Key Correctness After Shuffle**
+      - **Validates: Requirements 15.2, 15.3, 15.4, 15.8**
+
+    - [x] 9.1.4 Implementar upload de imagens para questões
+      - Criar componente ImageUploader com drag-and-drop
+      - Validar formato de imagem (JPEG, PNG, WebP)
+      - Upload para bucket exam-images/{user_id}/{exam_id}/
+      - Usar componentes shadcn/ui: Button, Dialog, Progress
+      - _Requirements: 16.1, 16.2, 16.3, 16.4_
+
+    - [ ]* 9.1.5 Escrever testes de propriedade para validação de imagens
+      - **Property 25: Image Format Validation**
+      - **Property 26: Image Storage Reference**
+      - **Validates: Requirements 16.3, 16.4**
+
+    - [x] 9.1.6 Implementar editor de questões com suporte a imagens
+      - Criar componente QuestionEditor com rich text básico
+      - Permitir inserir múltiplas imagens no texto da questão
+      - Criar componente AlternativeEditor com suporte a uma imagem
+      - Preview de imagens com aspect ratio correto
+      - Usar componentes shadcn/ui: Card, Input, Textarea, Button, Dialog
+      - _Requirements: 16.1, 16.2, 16.6_
+
+    - [ ]* 9.1.7 Escrever testes de propriedade para associação de imagens
+      - **Property 23: Question Image Multiplicity**
+      - **Property 24: Alternative Image Constraint**
+      - **Validates: Requirements 16.1, 16.2**
+
+    - [x] 9.1.8 Implementar DocxGenerator com suporte a imagens
+      - Integrar jszip para manipulação de DOCX
+      - Implementar embedding de imagens inline
+      - Gerar documento com questões, alternativas e imagens
+      - _Requirements: 12.1, 16.5_
+
+    - [ ]* 9.1.9 Escrever testes de propriedade para geração de DOCX
+      - **Property 27: DOCX Image Embedding**
+      - **Validates: Requirements 16.5**
+
+    - [x] 9.1.10 Implementar geração de múltiplas variantes
+      - Criar interface para configurar número de variantes (1-26)
+      - Implementar toggles para shuffle de questões e alternativas
+      - Gerar variantes com model identifiers (A, B, C, ...)
+      - Gerar gabarito único por variante
+      - Usar componentes shadcn/ui: Form, Input, Select, Switch, Button
+      - _Requirements: 15.1, 15.5, 15.6_
+
+    - [ ]* 9.1.11 Escrever testes de propriedade para identificadores de modelo
+      - **Property 21: Unique Model Identifiers**
+      - **Validates: Requirements 15.6**
+
+    - [x] 9.1.12 Implementar preservação de imagens ao embaralhar
+      - Garantir que imagens permanecem associadas ao conteúdo original
+      - Testar shuffle com questões e alternativas contendo imagens
+      - _Requirements: 16.8_
+
+    - [ ]* 9.1.13 Escrever testes de propriedade para preservação de imagens
+      - **Property 28: Image Association Preservation After Shuffle**
+      - **Validates: Requirements 16.8**
+
+    - [x] 9.1.14 Implementar exportação em ZIP
+      - Gerar ZIP contendo todos os DOCX das variantes
+      - Incluir arquivo de resumo com gabaritos por modelo
+      - Integrar qrious para QR codes nas folhas de resposta
+      - Upload do ZIP para Storage bucket exports/
+      - Usar componentes shadcn/ui: Button, Progress, Dialog
+      - _Requirements: 12.4, 15.7_
+
+    - [ ]* 9.1.15 Escrever testes de propriedade para exportação ZIP
+      - **Property 22: Export ZIP Contents**
+      - **Validates: Requirements 15.7**
+
+    - [x] 9.1.16 Persistir metadados no banco de dados
+      - Salvar exam com configurações de shuffle e seed
+      - Salvar exam_questions com texto e imagens
+      - Salvar exam_alternatives com texto e imagens
+      - Salvar exam_variants com order mappings e gabaritos
+      - _Requirements: 12.2, 12.3_
 
   - [ ]* 9.2 Escrever testes de propriedade para persistência de exames
     - **Property 15: Exam Persistence**
     - **Validates: Requirements 12.2, 12.3, 12.4**
 
-  - [ ] 9.3 Implementar página de assinaturas
+  - [x] 9.3 Implementar página de assinaturas
     - Listar planos disponíveis com Card grid
     - Usar componentes shadcn/ui: Card, Button, Badge, Dialog
     - Integrar com Stripe Checkout
     - Exibir status da assinatura atual com Alert
     - _Requirements: 10.1, 10.2, 10.5_
 
-  - [ ] 9.4 Implementar dashboard de consumo
+  - [x] 9.4 Implementar dashboard de consumo
     - Exibir saldo de tokens com Card
     - Usar componentes shadcn/ui: Card, Table, Progress
     - Listar histórico de uso (usage_ledger) com DataTable
     - _Requirements: 9.4_
 
-  - [ ] 9.5 Implementar controle de acesso por role
+  - [x] 9.5 Implementar controle de acesso por role
     - Verificar roles em rotas protegidas
     - Exibir/ocultar funcionalidades baseado em role
     - Usar componentes shadcn/ui: DropdownMenu para menu de usuário

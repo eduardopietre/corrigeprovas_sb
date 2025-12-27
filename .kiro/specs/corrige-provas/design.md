@@ -255,6 +255,132 @@ type StripeEventType =
   | 'invoice.payment_failed';
 ```
 
+### 5. Exam Builder (Client-Side)
+
+#### ExamBuilderService
+Serviço para criação de provas com randomização e geração de variantes.
+
+```typescript
+interface ExamQuestion {
+  id: string;
+  index: number;
+  text: string;
+  images: QuestionImage[];  // Imagens no texto da questão
+  alternatives: ExamAlternative[];
+  correctAlternativeIndex: number;  // Índice da alternativa correta (0-based)
+}
+
+interface ExamAlternative {
+  id: string;
+  text: string;
+  image: AlternativeImage | null;  // Uma imagem por alternativa
+}
+
+interface QuestionImage {
+  id: string;
+  storagePath: string;
+  position: number;  // Posição no texto onde a imagem aparece
+  width?: number;
+  height?: number;
+}
+
+interface AlternativeImage {
+  id: string;
+  storagePath: string;
+  width?: number;
+  height?: number;
+}
+
+interface ExamConfig {
+  name: string;
+  templateId: string;
+  questions: ExamQuestion[];
+  shuffleQuestions: boolean;
+  shuffleAlternatives: boolean;
+  variantCount: number;
+  seed?: number;  // Seed para randomização determinística
+}
+
+interface ExamVariantResult {
+  variantIndex: number;
+  modelIdentifier: string;  // "A", "B", "C", etc.
+  questionOrder: number[];  // Mapeamento: nova posição -> questão original
+  alternativeOrders: number[][];  // Para cada questão: nova posição -> alternativa original
+  answerKey: string;  // Gabarito ajustado para esta variante
+  docxBlob: Blob;
+}
+
+interface ExamBuilderService {
+  createExam(config: ExamConfig): Promise<ExamVariantResult[]>;
+  generateVariant(
+    questions: ExamQuestion[],
+    shuffleQuestions: boolean,
+    shuffleAlternatives: boolean,
+    seed: number
+  ): ExamVariantResult;
+  generateDocx(
+    questions: ExamQuestion[],
+    questionOrder: number[],
+    alternativeOrders: number[][],
+    modelIdentifier: string
+  ): Promise<Blob>;
+  exportAllVariants(variants: ExamVariantResult[]): Promise<Blob>;  // ZIP com todos os DOCX
+  uploadQuestionImage(file: File): Promise<QuestionImage>;
+  uploadAlternativeImage(file: File): Promise<AlternativeImage>;
+}
+```
+
+#### ShuffleService
+Serviço para randomização determinística de questões e alternativas.
+
+```typescript
+interface ShuffleService {
+  /**
+   * Embaralha um array usando Fisher-Yates com seed determinística.
+   * Retorna o array embaralhado e o mapeamento de índices.
+   */
+  shuffleWithMapping<T>(
+    items: T[],
+    seed: number
+  ): { shuffled: T[]; mapping: number[] };
+
+  /**
+   * Gera seed única para cada variante baseada em seed base.
+   */
+  generateVariantSeed(baseSeed: number, variantIndex: number): number;
+
+  /**
+   * Calcula a nova letra da resposta correta após shuffle de alternativas.
+   * Ex: se alternativa correta era índice 2 (C) e agora está no índice 0, retorna "A"
+   */
+  getShuffledCorrectAnswer(
+    originalCorrectIndex: number,
+    alternativeMapping: number[]
+  ): string;
+}
+```
+
+#### DocxGenerator
+Gerador de documentos DOCX com suporte a imagens.
+
+```typescript
+interface DocxGeneratorConfig {
+  title: string;
+  modelIdentifier: string;
+  questions: ExamQuestion[];
+  questionOrder: number[];
+  alternativeOrders: number[][];
+  includeAnswerKey: boolean;
+  headerText?: string;
+  footerText?: string;
+}
+
+interface DocxGenerator {
+  generate(config: DocxGeneratorConfig): Promise<Blob>;
+  embedImage(storagePath: string): Promise<ImageData>;
+}
+```
+
 ### 3. Worker Python
 
 #### QueueConsumer
@@ -390,8 +516,13 @@ erDiagram
     PROFILES ||--o{ USER_ROLES : has
     
     PROFILES ||--o{ EXAMS : owns
+    EXAMS ||--o{ EXAM_QUESTIONS : contains
+    EXAM_QUESTIONS ||--o{ QUESTION_IMAGES : has
+    EXAM_QUESTIONS ||--o{ EXAM_ALTERNATIVES : has
+    EXAM_ALTERNATIVES ||--o| ALTERNATIVE_IMAGES : has
     EXAMS ||--o{ EXAM_VARIANTS : has
     EXAM_VARIANTS }o--|| TEMPLATES : uses
+    EXAM_VARIANTS ||--|| VARIANT_ANSWER_KEYS : has
     
     PROFILES ||--o{ ANSWER_KEYS : owns
     ANSWER_KEYS }o--|| TEMPLATES : uses
@@ -441,6 +572,46 @@ erDiagram
         uuid owner_user_id FK
         uuid institution_id FK
         text name
+        bool shuffle_questions
+        bool shuffle_alternatives
+        int variant_count
+        int seed
+        timestamptz created_at
+    }
+    
+    EXAM_QUESTIONS {
+        uuid id PK
+        uuid exam_id FK
+        int index
+        text text
+        int correct_alternative_index
+        timestamptz created_at
+    }
+    
+    QUESTION_IMAGES {
+        uuid id PK
+        uuid question_id FK
+        text storage_path
+        int position
+        int width
+        int height
+        timestamptz created_at
+    }
+    
+    EXAM_ALTERNATIVES {
+        uuid id PK
+        uuid question_id FK
+        int index
+        text text
+        timestamptz created_at
+    }
+    
+    ALTERNATIVE_IMAGES {
+        uuid id PK
+        uuid alternative_id FK
+        text storage_path
+        int width
+        int height
         timestamptz created_at
     }
     
@@ -448,11 +619,20 @@ erDiagram
         uuid id PK
         uuid exam_id FK
         int variant_index
-        uuid model_id FK
+        text model_identifier
+        jsonb question_order
+        jsonb alternative_orders
         text qrcode_payload
+        text docx_storage_path
         timestamptz created_at
     }
     
+    VARIANT_ANSWER_KEYS {
+        uuid id PK
+        uuid variant_id FK
+        text answers_string
+        timestamptz created_at
+    }
     ANSWER_KEYS {
         uuid id PK
         uuid owner_user_id FK
@@ -556,6 +736,73 @@ interface AnswerKey {
   institutionId: string | null;
   examId: string | null;
   templateId: string;
+  answersString: string;
+  createdAt: string;
+}
+
+interface Exam {
+  id: string;
+  ownerUserId: string;
+  institutionId: string | null;
+  name: string;
+  shuffleQuestions: boolean;
+  shuffleAlternatives: boolean;
+  variantCount: number;
+  seed: number | null;
+  createdAt: string;
+}
+
+interface ExamQuestion {
+  id: string;
+  examId: string;
+  index: number;
+  text: string;
+  correctAlternativeIndex: number;
+  createdAt: string;
+}
+
+interface QuestionImage {
+  id: string;
+  questionId: string;
+  storagePath: string;
+  position: number;
+  width: number | null;
+  height: number | null;
+  createdAt: string;
+}
+
+interface ExamAlternative {
+  id: string;
+  questionId: string;
+  index: number;
+  text: string;
+  createdAt: string;
+}
+
+interface AlternativeImage {
+  id: string;
+  alternativeId: string;
+  storagePath: string;
+  width: number | null;
+  height: number | null;
+  createdAt: string;
+}
+
+interface ExamVariant {
+  id: string;
+  examId: string;
+  variantIndex: number;
+  modelIdentifier: string;
+  questionOrder: number[];
+  alternativeOrders: number[][];
+  qrcodePayload: string | null;
+  docxStoragePath: string | null;
+  createdAt: string;
+}
+
+interface VariantAnswerKey {
+  id: string;
+  variantId: string;
   answersString: string;
   createdAt: string;
 }
@@ -703,6 +950,20 @@ results/
 exports/
 ├── {user_id}/
 │   ├── exam_{exam_id}.zip
+│   └── ...
+└── ...
+
+exam-images/
+├── {user_id}/
+│   ├── {exam_id}/
+│   │   ├── questions/
+│   │   │   ├── q1_img1.jpg
+│   │   │   ├── q1_img2.png
+│   │   │   └── ...
+│   │   └── alternatives/
+│   │       ├── q1_a1.jpg
+│   │       ├── q2_a3.png
+│   │       └── ...
 │   └── ...
 └── ...
 ```
@@ -892,6 +1153,95 @@ Based on the prework analysis, the following correctness properties have been id
 
 **Validates: Requirements 14.1, 14.2, 14.4**
 
+### Property 18: Shuffle Determinism
+
+*For any* exam configuration with a given seed, shuffling questions and alternatives SHALL produce identical results when executed multiple times with the same seed.
+
+**Validates: Requirements 15.8**
+
+### Property 19: Conditional Shuffling
+
+*For any* exam with shuffleQuestions=false, the question order in all variants SHALL match the original order.
+*For any* exam with shuffleAlternatives=false, the alternative order within each question SHALL match the original order.
+*For any* exam with shuffleQuestions=true and more than one question, at least one variant SHALL have a different question order (with high probability).
+
+**Validates: Requirements 15.2, 15.3**
+
+### Property 20: Answer Key Correctness After Shuffle
+
+*For any* exam variant with shuffled alternatives:
+- The answer key letter at position i SHALL correspond to the alternative that was originally marked as correct for question i
+- If the original correct alternative was at index j and after shuffle is at index k, the answer key SHALL contain the letter corresponding to index k
+
+**Validates: Requirements 15.4, 15.5**
+
+### Property 21: Unique Model Identifiers
+
+*For any* exam with N variants:
+- Each variant SHALL have a unique modelIdentifier
+- Model identifiers SHALL follow the pattern "A", "B", "C", ... for variants 0, 1, 2, ...
+- No two variants SHALL share the same modelIdentifier
+
+**Validates: Requirements 15.6**
+
+### Property 22: Export ZIP Contents
+
+*For any* exam export with N variants:
+- The ZIP SHALL contain exactly N DOCX files
+- The ZIP SHALL contain a summary file with answer keys for all N models
+- Each DOCX filename SHALL include the model identifier
+
+**Validates: Requirements 15.7**
+
+### Property 23: Question Image Multiplicity
+
+*For any* exam question:
+- Zero or more images MAY be associated with the question text
+- Each image SHALL have a valid storage path and position
+
+**Validates: Requirements 16.1**
+
+### Property 24: Alternative Image Constraint
+
+*For any* exam alternative:
+- At most one image MAY be associated with the alternative
+- If an image exists, it SHALL have a valid storage path
+
+**Validates: Requirements 16.2**
+
+### Property 25: Image Format Validation
+
+*For any* image upload attempt:
+- Files with content-type image/jpeg, image/png, or image/webp SHALL be accepted
+- Files with other content-types SHALL be rejected with appropriate error
+
+**Validates: Requirements 16.3**
+
+### Property 26: Image Storage Reference
+
+*For any* successfully uploaded image:
+- A record SHALL exist in question_images or alternative_images table
+- The storage_path SHALL point to a valid file in the exam-images bucket
+
+**Validates: Requirements 16.4**
+
+### Property 27: DOCX Image Embedding
+
+*For any* generated DOCX for an exam variant:
+- The number of embedded images SHALL equal the sum of all question images and alternative images in the exam
+- Each image SHALL appear at its designated position in the document
+
+**Validates: Requirements 16.5**
+
+### Property 28: Image Association Preservation After Shuffle
+
+*For any* exam with images that undergoes shuffling:
+- After shuffling questions, each question SHALL retain its original images
+- After shuffling alternatives, each alternative SHALL retain its original image (if any)
+- The image content SHALL remain associated with the same text content regardless of position
+
+**Validates: Requirements 16.8**
+
 ## Error Handling
 
 ### Edge Function Errors
@@ -916,6 +1266,18 @@ Based on the prework analysis, the following correctness properties have been id
 | STORAGE_DOWNLOAD_FAILED | Cannot download source image | Retry job |
 | STORAGE_UPLOAD_FAILED | Cannot upload results | Retry job |
 | TEMPLATE_MISMATCH | Image doesn't match template | Verify correct template |
+
+### Exam Builder Errors
+
+| Error Code | Description | Recovery |
+|------------|-------------|----------|
+| INVALID_IMAGE_FORMAT | Uploaded file is not JPEG/PNG/WebP | Upload valid image format |
+| IMAGE_TOO_LARGE | Image exceeds size limit | Compress or resize image |
+| IMAGE_UPLOAD_FAILED | Failed to upload image to Storage | Retry upload |
+| VARIANT_COUNT_EXCEEDED | Requested more than 26 variants | Reduce variant count |
+| DOCX_GENERATION_FAILED | Failed to generate DOCX file | Retry generation |
+| ZIP_GENERATION_FAILED | Failed to create export ZIP | Retry export |
+| QUESTION_COUNT_MISMATCH | Question count doesn't match template | Adjust questions or template |
 
 ### Error Response Format
 
