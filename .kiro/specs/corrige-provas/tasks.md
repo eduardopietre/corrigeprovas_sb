@@ -115,26 +115,26 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 17: Input Validation**
     - **Validates: Requirements 14.1, 14.2, 14.4**
 
-- [ ] 4. Checkpoint - Verificar Edge Functions
+- [x] 4. Checkpoint - Verificar Edge Functions
   - Executar `supabase functions serve` localmente
   - Testar cada função com curl/httpie
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 5. Implementar Worker Python
-  - [ ] 5.1 Configurar projeto Python
+- [-] 5. Implementar Worker Python
+  - [x] 5.1 Configurar projeto Python
     - Criar estrutura de diretórios (worker/, tests/)
     - Configurar pyproject.toml com dependências (opencv-python, supabase-py, openpyxl, hypothesis)
     - Configurar pytest e hypothesis
     - _Requirements: 6.1_
 
-  - [ ] 5.2 Implementar QueueConsumer
+  - [x] 5.2 Implementar QueueConsumer
     - Conectar ao Supabase com service_role_key
     - Implementar loop de consumo da fila "corrections"
     - Implementar visibility timeout e retry
     - Atualizar status do job para PROCESSING
     - _Requirements: 6.1, 6.2_
 
-  - [ ] 5.3 Implementar ImageProcessor
+  - [x] 5.3 Implementar ImageProcessor
     - Implementar normalize() para ajuste de brilho/contraste
     - Implementar align() para alinhamento via marcadores
     - Implementar detect_marks() para detecção de respostas
@@ -146,7 +146,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 9: Answer Comparison Correctness**
     - **Validates: Requirements 6.5**
 
-  - [ ] 5.5 Implementar XLSXGenerator
+  - [x] 5.5 Implementar XLSXGenerator
     - Gerar planilha com colunas: identificador, respostas detectadas, acertos, total
     - Incluir resumo estatístico
     - _Requirements: 6.7_
