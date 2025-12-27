@@ -5,7 +5,7 @@
 Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A implementação segue uma abordagem incremental: primeiro a infraestrutura de banco e autenticação, depois as Edge Functions, o Worker Python, e finalmente a integração no Frontend.
 
 **Stack**:
-- Frontend: React + Vite + TypeScript
+- Frontend: React + Vite + TypeScript + shadcn/ui
 - Backend: Supabase (Postgres, Auth, Storage, Realtime, Queues)
 - Edge Functions: TypeScript/Deno
 - Worker: Python + OpenCV
@@ -173,54 +173,66 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
   - Testes com imagens de exemplo, check corrector_backend_v2/tests for info
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 7. Implementar Frontend
-  - [ ] 7.1 Configurar projeto React + Vite
+- [x] 7. Implementar Frontend
+  - [x] 7.1 Configurar projeto React + Vite
     - Criar projeto com `npm create vite@latest`
     - Instalar dependências (supabase-js, react-router-dom, tailwindcss)
     - Configurar variáveis de ambiente VITE_SUPABASE_*
     - _Requirements: 1.1_
 
-  - [ ] 7.2 Implementar AuthContext
+  - [x] 7.2 Configurar shadcn/ui
+    - Executar `npx shadcn@latest init` para inicializar
+    - Configurar components.json com estilo e cores
+    - Instalar dependências: react-hook-form, zod, @hookform/resolvers, lucide-react, @tanstack/react-query
+    - Adicionar componentes base: Button, Input, Label, Card, Form, Toast, Dialog, Select, Table, Progress, Skeleton, Alert, Tabs, DropdownMenu
+    - _Requirements: N/A (infraestrutura)_
+
+  - [x] 7.3 Implementar AuthContext
     - Criar contexto de autenticação com Supabase Auth
     - Implementar signIn, signUp, signOut, resetPassword
+    - Implementar OAuth com Google
     - Gerenciar sessão e estado de loading
+    - Usar componentes shadcn/ui: Card, Form, Input, Button, Alert
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-  - [ ]* 7.3 Escrever testes de propriedade para autenticação
+  - [x] 7.4 Escrever testes de propriedade para autenticação
     - **Property 1: Authentication Session Validity**
     - **Property 2: Registration Profile Linkage**
     - **Validates: Requirements 1.1, 1.2**
 
-  - [ ] 7.4 Implementar CorrectionService
+  - [x] 7.5 Implementar CorrectionService
     - Implementar getUploadUrls() chamando Edge Function
     - Implementar createJob() chamando Edge Function
     - Implementar getResultUrls() chamando Edge Function
     - Implementar subscribeToJob() com Realtime
     - _Requirements: 4.1, 5.1, 7.1, 8.1, 8.2_
 
-  - [ ] 7.5 Implementar páginas de correção
-    - Criar página de upload de imagens
-    - Criar seletor de template e gabarito
-    - Criar visualização de progresso em tempo real
-    - Criar página de resultados com download
+  - [x] 7.6 Implementar páginas de correção
+    - Criar página de upload de imagens com drag-and-drop
+    - Usar componentes shadcn/ui: Card, Button, Progress, Dialog, Select
+    - Criar seletor de template e gabarito com Select/Command
+    - Criar visualização de progresso em tempo real com Progress
+    - Criar página de resultados com Table e download
     - _Requirements: 4.2, 8.3, 8.4_
 
-  - [ ] 7.6 Implementar gestão de gabaritos
-    - Criar formulário de criação de gabarito
+  - [x] 7.7 Implementar gestão de gabaritos
+    - Criar formulário de criação de gabarito com Form + zod
+    - Usar componentes shadcn/ui: Form, Input, Select, Button, Table, Dialog
     - Validar answers_string no frontend
-    - Listar gabaritos do usuário
+    - Listar gabaritos do usuário com DataTable
     - _Requirements: 3.1, 3.2, 3.4_
 
-  - [ ]* 7.7 Escrever testes de propriedade para validação de gabarito
+  - [x] 7.8 Escrever testes de propriedade para validação de gabarito
     - **Property 5: Answer Key Validation**
     - **Validates: Requirements 3.1, 3.2, 3.3**
 
-  - [ ] 7.8 Implementar gestão de templates
-    - Listar templates ativos
+  - [x] 7.9 Implementar gestão de templates
+    - Listar templates ativos com Card grid
+    - Usar componentes shadcn/ui: Card, Badge, Skeleton
     - Exibir detalhes (question_count, alternatives_count)
     - _Requirements: 2.1, 2.2, 2.4_
 
-  - [ ]* 7.9 Escrever testes de propriedade para templates
+  - [x] 7.10 Escrever testes de propriedade para templates
     - **Property 4: Template Constraints**
     - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5**
 
@@ -232,6 +244,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
 - [ ] 9. Implementar funcionalidades adicionais
   - [ ] 9.1 Implementar criação de provas client-side
     - Integrar jszip e qrious para geração de DOCX/ZIP
+    - Usar componentes shadcn/ui: Form, Input, Select, Button, Tabs, Dialog
     - Persistir metadados em exams e exam_variants
     - Upload de artefatos para Storage
     - _Requirements: 12.1, 12.2, 12.3, 12.4_
@@ -241,19 +254,22 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Validates: Requirements 12.2, 12.3, 12.4**
 
   - [ ] 9.3 Implementar página de assinaturas
-    - Listar planos disponíveis
+    - Listar planos disponíveis com Card grid
+    - Usar componentes shadcn/ui: Card, Button, Badge, Dialog
     - Integrar com Stripe Checkout
-    - Exibir status da assinatura atual
+    - Exibir status da assinatura atual com Alert
     - _Requirements: 10.1, 10.2, 10.5_
 
   - [ ] 9.4 Implementar dashboard de consumo
-    - Exibir saldo de tokens
-    - Listar histórico de uso (usage_ledger)
+    - Exibir saldo de tokens com Card
+    - Usar componentes shadcn/ui: Card, Table, Progress
+    - Listar histórico de uso (usage_ledger) com DataTable
     - _Requirements: 9.4_
 
   - [ ] 9.5 Implementar controle de acesso por role
     - Verificar roles em rotas protegidas
     - Exibir/ocultar funcionalidades baseado em role
+    - Usar componentes shadcn/ui: DropdownMenu para menu de usuário
     - _Requirements: 1.6, 1.7_
 
   - [ ]* 9.6 Escrever testes de propriedade para controle de acesso
@@ -308,3 +324,6 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
 - Unit tests validam exemplos específicos e edge cases
 - O Worker Python deve ser executado como serviço separado (container/VM)
 - Edge Functions são deployadas via `supabase functions deploy`
+- **shadcn/ui**: Usar sempre que possível para componentes de UI. Componentes são copiados para `src/components/ui/` e podem ser customizados livremente.
+- **Formulários**: Usar react-hook-form + zod + shadcn Form para validação consistente
+- **Ícones**: Usar lucide-react (já incluído no shadcn/ui)

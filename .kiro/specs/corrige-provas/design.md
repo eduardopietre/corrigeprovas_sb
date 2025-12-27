@@ -5,11 +5,26 @@
 O CorrigeProvas é um sistema de correção automatizada de provas de múltipla escolha com arquitetura Supabase-first. O sistema permite que professores criem provas, definam gabaritos, façam upload de folhas de resposta digitalizadas e recebam correções automáticas com relatórios.
 
 A arquitetura é composta por:
-- **Frontend**: SPA React + Vite com integração Supabase
+- **Frontend**: SPA React + Vite + shadcn/ui com integração Supabase
 - **Backend**: Supabase (Auth, Postgres, Storage, Realtime, Queues, Cron) + Edge Functions
 - **Worker**: Serviço Python com OpenCV para processamento de imagens
 
 O fluxo principal é assíncrono: upload → fila → processamento → resultados via Realtime.
+
+### UI Framework
+
+O frontend utiliza **shadcn/ui** como biblioteca de componentes, sempre que possível. shadcn/ui é uma coleção de componentes reutilizáveis construídos com Radix UI e Tailwind CSS. Os componentes são copiados diretamente para o projeto (não é uma dependência npm), permitindo customização total.
+
+**Componentes shadcn/ui a serem utilizados**:
+- `Button`, `Input`, `Label`, `Textarea` - Formulários
+- `Card`, `Dialog`, `Sheet` - Containers e modais
+- `Table`, `DataTable` - Listagens
+- `Select`, `Checkbox`, `RadioGroup` - Seleção
+- `Progress`, `Skeleton` - Feedback de loading
+- `Toast`, `Alert` - Notificações
+- `Tabs`, `Accordion` - Navegação
+- `DropdownMenu`, `Command` - Menus
+- `Form` (react-hook-form + zod) - Validação de formulários
 
 ## Architecture
 
@@ -960,6 +975,20 @@ flowchart TD
 | Edge Functions | Deno Test + Supabase CLI | Native Deno testing |
 | Worker Python | pytest + hypothesis | Mature, property-based testing support |
 | E2E | Playwright | Cross-browser, reliable |
+
+### Frontend Stack
+
+| Library | Purpose |
+|---------|---------|
+| React 19 | UI Framework |
+| Vite | Build tool |
+| TypeScript | Type safety |
+| Tailwind CSS v4 | Styling |
+| shadcn/ui | Component library (Radix UI + Tailwind) |
+| react-hook-form | Form handling |
+| zod | Schema validation |
+| @tanstack/react-query | Server state management |
+| lucide-react | Icons |
 
 ### Unit Tests
 
