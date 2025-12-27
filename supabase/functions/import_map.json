@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.47.10",
+    "zod": "https://deno.land/x/zod@v3.23.8/mod.ts",
+    "stripe": "https://esm.sh/stripe@14.14.0?target=deno"
+  }
+}

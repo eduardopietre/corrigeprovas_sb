@@ -60,14 +60,14 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
   - Verificar buckets de Storage
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. Implementar Edge Functions
-  - [ ] 3.1 Configurar estrutura de Edge Functions
+- [x] 3. Implementar Edge Functions
+  - [x] 3.1 Configurar estrutura de Edge Functions
     - Criar diretório `supabase/functions`
     - Configurar shared modules (supabase client, validation, errors)
     - Instalar dependências (zod)
     - _Requirements: 14.1_
 
-  - [ ] 3.2 Implementar get_upload_urls
+  - [x] 3.2 Implementar get_upload_urls
     - Criar schema Zod para validação de entrada
     - Gerar signed URLs para upload direto ao Storage
     - Retornar paths e URLs com TTL curto
@@ -77,7 +77,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 7: Upload URL Generation**
     - **Validates: Requirements 4.1, 4.2, 4.4**
 
-  - [ ] 3.4 Implementar create_job
+  - [x] 3.4 Implementar create_job
     - Criar schema Zod para validação de entrada
     - Validar ownership de answer_key via query
     - Chamar reserve_tokens transacionalmente
@@ -90,7 +90,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 8: Job Creation Invariants**
     - **Validates: Requirements 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7**
 
-  - [ ] 3.6 Implementar get_result_urls
+  - [x] 3.6 Implementar get_result_urls
     - Criar schema Zod para validação de entrada
     - Validar ownership do job
     - Gerar signed URLs para XLSX e imagens marcadas
@@ -100,7 +100,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 11: Result URL Authorization**
     - **Validates: Requirements 7.1, 7.2, 7.3, 7.4**
 
-  - [ ] 3.8 Implementar stripe_webhook
+  - [x] 3.8 Implementar stripe_webhook
     - Validar assinatura do webhook Stripe
     - Processar eventos de subscription (created, updated, deleted)
     - Processar eventos de invoice (paid, payment_failed)
