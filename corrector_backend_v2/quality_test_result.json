@@ -1,0 +1,258 @@
+{
+    "results": [
+        {
+            "Template": "10_4_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_4_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_4_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_4_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.0235,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_4_template",
+            "Append": "Complex",
+            "Error": 0.0005,
+            "AlignError": 0.022,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.0125,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "Complex",
+            "Error": 0.0,
+            "AlignError": 0.018,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.019,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "Complex",
+            "Error": 0.0,
+            "AlignError": 0.014,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.009,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "Complex",
+            "Error": 0.0,
+            "AlignError": 0.01,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.014,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "Complex",
+            "Error": 0.0,
+            "AlignError": 0.0095,
+            "AmountOfImages": 2000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "Simple",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "Anullable",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "Mistake",
+            "Error": 0.0,
+            "AlignError": 0.0,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "Distort",
+            "Error": 0.0,
+            "AlignError": 0.014,
+            "AmountOfImages": 1000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "Complex",
+            "Error": 0.0,
+            "AlignError": 0.016,
+            "AmountOfImages": 1000
+        }
+    ],
+    "agregated": [
+        {
+            "Template": "10_4_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0001,
+            "AlignError": 0.0091,
+            "AmountOfImages": 10000
+        },
+        {
+            "Template": "20_4_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0,
+            "AlignError": 0.0061,
+            "AmountOfImages": 10000
+        },
+        {
+            "Template": "100_4_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0,
+            "AlignError": 0.0066,
+            "AmountOfImages": 5000
+        },
+        {
+            "Template": "10_5_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0,
+            "AlignError": 0.0038,
+            "AmountOfImages": 10000
+        },
+        {
+            "Template": "20_5_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0,
+            "AlignError": 0.0047,
+            "AmountOfImages": 10000
+        },
+        {
+            "Template": "100_5_template",
+            "Append": "TestResult.combine",
+            "Error": 0.0,
+            "AlignError": 0.006,
+            "AmountOfImages": 5000
+        }
+    ]
+}

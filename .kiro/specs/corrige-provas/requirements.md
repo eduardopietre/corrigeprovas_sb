@@ -6,6 +6,8 @@ O CorrigeProvas é uma aplicação web para correção automatizada de provas de
 
 A arquitetura é Supabase-first: Supabase como backend principal (Auth + DB + Storage + Realtime + Queues + Cron), Edge Functions (TypeScript/Deno) para lógica de negócio, e Worker Python isolado para reconhecimento via OpenCV.
 
+IMPORTANTE: Parte do backend com a lógica em python já existe.
+
 ## Glossary
 
 - **Sistema**: A aplicação CorrigeProvas como um todo
