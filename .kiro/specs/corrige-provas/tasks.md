@@ -13,20 +13,20 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
 
 ## Tasks
 
-- [ ] 1. Setup inicial do projeto Supabase
-  - [ ] 1.1 Criar projeto Supabase e configurar ambiente local
+- [x] 1. Setup inicial do projeto Supabase
+  - [x] 1.1 Criar projeto Supabase e configurar ambiente local
     - Instalar Supabase CLI
     - Executar `supabase init` e `supabase start`
     - Configurar variáveis de ambiente (.env.local)
     - _Requirements: 11.1_
 
-  - [ ] 1.2 Criar schema do banco de dados
+  - [x] 1.2 Criar schema do banco de dados
     - Criar migration com todas as tabelas: profiles, institutions, user_roles, templates, exams, exam_variants, answer_keys, correction_jobs, correction_items, plans, subscriptions, usage_ledger
     - Definir tipos enum para status, roles, reasons
     - Criar índices para queries frequentes
     - _Requirements: 2.5, 3.3, 5.2_
 
-  - [ ] 1.3 Implementar políticas RLS
+  - [x] 1.3 Implementar políticas RLS
     - Habilitar RLS em todas as tabelas com dados de usuário
     - Criar políticas SELECT/INSERT/UPDATE/DELETE baseadas em owner_user_id e institution_id
     - _Requirements: 11.1, 11.2, 11.3_
@@ -35,7 +35,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 6: RLS Data Isolation**
     - **Validates: Requirements 3.4, 11.2, 11.3**
 
-  - [ ] 1.5 Criar funções SQL para tokens
+  - [x] 1.5 Criar funções SQL para tokens
     - Implementar `reserve_tokens(user_id, amount, job_id)`
     - Implementar `release_tokens(job_id)`
     - Implementar `get_balance(user_id)`
@@ -45,7 +45,7 @@ Este plano implementa o sistema CorrigeProvas com arquitetura Supabase-first. A 
     - **Property 12: Token Ledger Consistency**
     - **Validates: Requirements 9.1, 9.2, 9.3, 9.4**
 
-  - [ ] 1.7 Configurar Storage buckets
+  - [x] 1.7 Configurar Storage buckets
     - Criar buckets: templates, uploads, results, exports
     - Configurar políticas de acesso por bucket
     - _Requirements: 4.2, 11.6, 11.7_
