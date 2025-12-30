@@ -6,10 +6,10 @@ import { z } from 'zod'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/contexts/AuthContext'
+import { ArrowLeft, CheckCircle2 } from 'lucide-react'
 
 const loginSchema = z.object({
     email: z.string().email('Email inválido'),
@@ -60,17 +60,44 @@ export function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-            <Card className="w-full max-w-md">
-                <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">Entrar</CardTitle>
-                    <CardDescription>
-                        Entre com sua conta para acessar o CorrigeProvas
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+        <div className="min-h-screen w-full flex">
+            {/* Left Side - Visuals */}
+            <div className="hidden lg:flex w-1/2 bg-background relative overflow-hidden items-center justify-center p-12">
+                <div className="absolute inset-0 bg-primary/5 dark:bg-primary/10" />
+                <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/30 to-transparent blur-[120px] rounded-full animate-pulse" />
+                <div className="relative z-10 max-w-lg text-left">
+                    <h1 className="text-5xl font-bold tracking-tight mb-6">
+                        Correção automática, <br />
+                        <span className="text-gradient">resultados instantâneos.</span>
+                    </h1>
+                    <p className="text-xl text-muted-foreground mb-8">
+                        Economize horas de trabalho manual. Digitalize, corrija e analise o desempenho dos seus alunos em minutos.
+                    </p>
+                    <div className="space-y-4">
+                        {['Correção via IA', 'Relatórios Detalhados', 'Exportação para Excel'].map((feature) => (
+                            <div key={feature} className="flex items-center gap-3">
+                                <CheckCircle2 className="h-5 w-5 text-primary" />
+                                <span className="text-lg">{feature}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="flex-1 flex flex-col items-center justify-center p-4 lg:p-12 relative bg-background/50 backdrop-blur-sm">
+                <Link to="/" className="absolute top-8 left-8 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
+                    <ArrowLeft className="h-4 w-4" /> Voltar
+                </Link>
+
+                <div className="w-full max-w-sm space-y-8 glass p-8 rounded-2xl animate-fade-in-up">
+                    <div className="text-center space-y-2">
+                        <h2 className="text-3xl font-bold">Bem-vindo de volta</h2>
+                        <p className="text-muted-foreground">Entre na sua conta para continuar</p>
+                    </div>
+
                     {error && (
-                        <Alert variant="destructive" className="mb-4">
+                        <Alert variant="destructive">
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
                     )}
@@ -87,6 +114,7 @@ export function LoginPage() {
                                             <Input
                                                 type="email"
                                                 placeholder="seu@email.com"
+                                                className="bg-background/50"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -105,6 +133,7 @@ export function LoginPage() {
                                             <Input
                                                 type="password"
                                                 placeholder="••••••••"
+                                                className="bg-background/50"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -113,18 +142,18 @@ export function LoginPage() {
                                 )}
                             />
 
-                            <Button type="submit" className="w-full" disabled={isLoading}>
+                            <Button type="submit" className="w-full h-11 text-base shadow-lg shadow-primary/25" disabled={isLoading}>
                                 {isLoading ? 'Entrando...' : 'Entrar'}
                             </Button>
                         </form>
                     </Form>
 
-                    <div className="relative my-4">
+                    <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
+                            <span className="w-full border-t border-white/10" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-card px-2 text-muted-foreground">
+                            <span className="bg-background px-2 text-muted-foreground">
                                 Ou continue com
                             </span>
                         </div>
@@ -132,7 +161,7 @@ export function LoginPage() {
 
                     <Button
                         variant="outline"
-                        className="w-full"
+                        className="w-full h-11 bg-background/50 hover:bg-background/80"
                         onClick={handleGoogleSignIn}
                         type="button"
                     >
@@ -156,22 +185,26 @@ export function LoginPage() {
                         </svg>
                         Google
                     </Button>
-                </CardContent>
-                <CardFooter className="flex flex-col space-y-2">
-                    <Link
-                        to="/forgot-password"
-                        className="text-sm text-muted-foreground hover:text-primary"
-                    >
-                        Esqueceu sua senha?
-                    </Link>
-                    <div className="text-sm text-muted-foreground">
-                        Não tem uma conta?{' '}
-                        <Link to="/register" className="text-primary hover:underline">
-                            Cadastre-se
+
+                    <div className="flex flex-col space-y-4 text-center text-sm">
+                        <Link
+                            to="/forgot-password"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                            Esqueceu sua senha?
                         </Link>
+                        <p className="text-muted-foreground">
+                            Não tem uma conta?{' '}
+                            <Link to="/register" className="text-primary hover:underline font-medium">
+                                Cadastre-se gratuitamente
+                            </Link>
+                        </p>
                     </div>
-                </CardFooter>
-            </Card>
+                </div>
+                <div className="mt-8 text-center text-xs text-muted-foreground">
+                    &copy; {new Date().getFullYear()} CorrigeProvas. Todos os direitos reservados.
+                </div>
+            </div>
         </div>
     )
 }

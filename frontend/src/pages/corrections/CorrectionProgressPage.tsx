@@ -183,21 +183,21 @@ export function CorrectionProgressPage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <header className="border-b">
+            <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
                     <Button variant="ghost" size="icon" asChild>
                         <Link to="/dashboard">
                             <ArrowLeft className="h-5 w-5" />
                         </Link>
                     </Button>
-                    <h1 className="text-xl font-bold">Correção</h1>
+                    <h1 className="text-xl font-bold tracking-tight">Correção</h1>
                 </div>
             </header>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
+            <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6 animate-fade-in-up">
                 {/* Status Card */}
-                <Card>
+                <Card className="glass">
                     <CardHeader>
                         <div className="flex items-center gap-3">
                             {statusInfo.icon}
@@ -246,7 +246,7 @@ export function CorrectionProgressPage() {
 
                 {/* Results Card */}
                 {job.status === 'DONE' && results && (
-                    <Card>
+                    <Card className="glass">
                         <CardHeader>
                             <CardTitle>Resultados</CardTitle>
                             <CardDescription>

@@ -72,13 +72,13 @@ describe('ShuffleService', () => {
                     (items, seed1, seedOffset) => {
                         const seed2 = (seed1 + seedOffset) >>> 0
 
-                        const result1 = shuffleWithMapping(items, seed1)
-                        const result2 = shuffleWithMapping(items, seed2)
+                        shuffleWithMapping(items, seed1)
+                        shuffleWithMapping(items, seed2)
 
                         // With different seeds and enough items, shuffles should differ
                         // (This is probabilistic but very likely with 5+ items)
                         if (items.length >= 5) {
-                            const sameOrder = result1.mapping.every((v, i) => v === result2.mapping[i])
+                            // result1.mapping.every((v, i) => v === result2.mapping[i])
                             // It's extremely unlikely to get the same order with different seeds
                             // but we allow it since it's technically possible
                             return true  // Just verify no errors occur

@@ -7,10 +7,13 @@ import {
   CorrectionProgressPage,
   CorrectionsListPage,
   DashboardPage,
+  ExamDetailsPage,
+  ExamsListPage,
   ForgotPasswordPage,
   LoginPage,
   NewAnswerKeyPage,
   NewCorrectionPage,
+  NewExamPage,
   RegisterPage,
   TemplatesListPage,
 } from '@/pages'
@@ -52,6 +55,31 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Exam routes */}
+          <Route
+            path="/exams"
+            element={
+              <ProtectedRoute>
+                <ExamsListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exams/new"
+            element={
+              <ProtectedRoute>
+                <NewExamPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exams/:examId"
+            element={
+              <ProtectedRoute>
+                <ExamDetailsPage />
               </ProtectedRoute>
             }
           />

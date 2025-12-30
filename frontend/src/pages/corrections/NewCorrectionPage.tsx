@@ -159,19 +159,19 @@ export function NewCorrectionPage() {
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
-            <header className="border-b">
+            <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
                 <div className="container mx-auto px-4 py-4 flex items-center gap-4">
                     <Button variant="ghost" size="icon" asChild>
                         <Link to="/dashboard">
                             <ArrowLeft className="h-5 w-5" />
                         </Link>
                     </Button>
-                    <h1 className="text-xl font-bold">Nova Correção</h1>
+                    <h1 className="text-xl font-bold tracking-tight">Nova Correção</h1>
                 </div>
             </header>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-8 max-w-3xl">
+            <main className="container mx-auto px-4 py-8 max-w-3xl animate-fade-in-up">
                 {error && (
                     <Alert variant="destructive" className="mb-6">
                         <AlertDescription>{error}</AlertDescription>
@@ -180,7 +180,7 @@ export function NewCorrectionPage() {
 
                 <div className="space-y-6">
                     {/* Template and Answer Key Selection */}
-                    <Card>
+                    <Card className="glass">
                         <CardHeader>
                             <CardTitle>Configuração</CardTitle>
                             <CardDescription>
@@ -242,7 +242,7 @@ export function NewCorrectionPage() {
                     </Card>
 
                     {/* File Upload */}
-                    <Card>
+                    <Card className="glass">
                         <CardHeader>
                             <CardTitle>Imagens</CardTitle>
                             <CardDescription>
@@ -253,8 +253,8 @@ export function NewCorrectionPage() {
                             {/* Drop Zone */}
                             <div
                                 className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${isDragging
-                                        ? 'border-primary bg-primary/5'
-                                        : 'border-muted-foreground/25 hover:border-primary/50'
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-muted-foreground/25 hover:border-primary/50'
                                     }`}
                                 onDrop={handleDrop}
                                 onDragOver={handleDragOver}
@@ -343,7 +343,7 @@ export function NewCorrectionPage() {
 
                     {/* Upload Progress */}
                     {isUploading && (
-                        <Card>
+                        <Card className="glass">
                             <CardContent className="pt-6">
                                 <div className="space-y-2">
                                     <div className="flex items-center justify-between text-sm">
