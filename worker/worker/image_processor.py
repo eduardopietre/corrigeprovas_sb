@@ -19,12 +19,12 @@ BACKEND_PATH = Path(__file__).parent.parent.parent / "corrector_backend_v2"
 if str(BACKEND_PATH) not in sys.path:
     sys.path.insert(0, str(BACKEND_PATH))
 
-from src.core import Corrector
-from src.template_matcher import TemplateData
-from src.constants import TemplateName
-from src.structures import ExtractedDataOrError
-from src.correction_utils import indexes_of_letters, letters_from_indexes
-from src.errors import (
+from corrector_backend_v2.core import Corrector
+from corrector_backend_v2.template_matcher import TemplateData
+from corrector_backend_v2.constants import TemplateName
+from corrector_backend_v2.structures import ExtractedDataOrError
+from corrector_backend_v2.correction_utils import indexes_of_letters, letters_from_indexes
+from corrector_backend_v2.errors import (
     WrongNumberDetectedInImageException,
     UnableToFindFourAlignTrianglesException,
     FoundAlignTrianglesAreNotFilledException
@@ -112,7 +112,7 @@ class ImageProcessor:
         Returns:
             Imagem normalizada em escala de cinza/binária.
         """
-        from src.normalizer import ImageNormalizer
+        from corrector_backend_v2.normalizer import ImageNormalizer
         return ImageNormalizer.normalize_image(image, shadow=True)
     
     def align(self, image: np.ndarray) -> np.ndarray:
@@ -132,7 +132,7 @@ class ImageProcessor:
             UnableToFindFourAlignTrianglesException: Se não encontrar os triângulos.
             FoundAlignTrianglesAreNotFilledException: Se os triângulos não estiverem preenchidos.
         """
-        from src.recognizer import Recognizer
+        from corrector_backend_v2.recognizer import Recognizer
         
         matcher = self.template_data.new_template_matcher(self.template_name)
         recognizer = Recognizer(matcher)
