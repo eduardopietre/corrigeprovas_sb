@@ -246,9 +246,9 @@ class TemplateData:
             yield key, cell
 
 
-def load_template_data(json_path="../generated/templates_grid_data.json") -> GridJSONHandler:
+def load_template_data(json_path="generated/templates_grid_data.json") -> GridJSONHandler:
     """
     Args:
-        json_path (str, optional): Path to the JSON file containing template data. Defaults to "../generated/templates_grid_data.json".
+        json_path (str, optional): Path to the JSON file containing template data. Defaults to "generated/templates_grid_data.json".
     """
     return GridJSONHandler.load_from_json(relative_path(json_path, __file__))
