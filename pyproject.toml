@@ -42,7 +42,7 @@ dev = [
 ]
 
 [project.scripts]
-corrigeprovas-worker = "worker.main:main"
+corrigeprovas-worker = "worker.worker.main:main"
 corrector-backend = "corrector_backend_v2.core:main"
 
 [tool.setuptools.packages.find]
