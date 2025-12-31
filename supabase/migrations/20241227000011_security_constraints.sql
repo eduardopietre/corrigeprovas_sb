@@ -14,7 +14,7 @@ BEGIN
     END IF;
     
     -- Check for path traversal sequences
-    IF path LIKE '%..%' OR path LIKE '%/%' OR path LIKE '%\%' THEN
+    IF path LIKE '%/../%' OR path LIKE '%\..\%' OR path LIKE '%..%' THEN
         RETURN FALSE;
     END IF;
     
