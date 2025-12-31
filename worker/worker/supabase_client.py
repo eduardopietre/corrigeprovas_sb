@@ -55,7 +55,7 @@ class SupabaseWorkerClient:
                 "pgmq_read",
                 {
                     "queue_name": self.config.queue_name,
-                    "vt": self.config.visibility_timeout,
+                    "visibility_timeout": self.config.visibility_timeout,
                     "qty": 1
                 }
             ).execute()
